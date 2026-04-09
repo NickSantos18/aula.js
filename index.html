@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloqueio de Acesso - Cyber-SENAI</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .campo { margin-bottom: 10px; }
+        #resultado { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Terminal de Alta Segurança</h2>
+    
+    <div class="campo">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username">
+    </div>
+
+    <div class="campo">
+        <label for="password">Senha:</label>
+        <input type="password" id="password">
+    </div>
+
+    <button onclick="authenticate()">Entrar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        // 1. Base de Dados (Corrigida com vírgulas)
+        const users = [
+            { username: "user1", password: "pass1" },
+            { username: "user2", password: "pass2" },
+            { username: "user3", password: "pass3" },
+            { username: "user4", password: "pass4" },
+            { username: "user5", password: "pass5" },
+            { username: "user6", password: "pass6" },
+            { username: "user7", password: "pass7" },
+            { username: "user8", password: "pass8" },
+            { username: "user9", password: "pass9" },
+            { username: "user10", password: "pass10" }
+        ];
+
+        let tentativas = 3;
+
+        function authenticate() {
+            const resDiv = document.getElementById("resultado");
+            const userInp = document.getElementById("username").value;
+            const passInp = document.getElementById("password").value;
+
+            // Se o sistema já estiver bloqueado, nem tenta
+            if (tentativas <= 0) {
+                resDiv.innerText = "SISTEMA BLOQUEADO - Procure o Suporte";
+                resDiv.style.color = "red";
+                return;
+            }
+
+            // Lógica de validação
+            // Nota: Como estamos usando inputs HTML, o laço do...while 
+            // aqui serve para validar a tentativa atual.
+            let logado = false;
+
+            do {
+                const usuarioEncontrado = users.find(u => u.username === userInp && u.password === passInp);
+
+                if (usuarioEncontrado) {
+                    resDiv.innerText = "Acesso Liberado!";
+                    resDiv.style.color = "green";
+                    logado = true;
+                } else {
+                    tentativas--;
+                    if (tentativas > 0) {
+                        resDiv.innerText = `Login ou Senha incorretos! Restam ${tentativas} tentativas.`;
+                        resDiv.style.color = "orange";
+                    } else {
+                        resDiv.innerText = "SISTEMA BLOQUEADO - Procure o Suporte";
+                        resDiv.style.color = "red";
+                        // Desabilita os campos após bloquear
+                        document.getElementById("username").disabled = true;
+                        document.getElementById("password").disabled = true;
+                    }
+                }
+
+                // O laço do...while executa uma vez e para, 
+                // pois a entrada vem do clique no botão.
+            } while (false); 
+        }
+    </script>
+</body>
+</html>
